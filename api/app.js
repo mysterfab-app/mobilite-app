@@ -1,30 +1,30 @@
-// api/app.js
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-
-require('dotenv').config();
+const express = require("express");
+const path = require("path");
+const cors = require("cors");
+const helmet = require("helmet");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Sécurité
+// Middleware
+app.use(cors());
 app.use(helmet());
-
-// CORS - autorise uniquement ton front
-app.use(cors({
-  origin: process.env.FRONT_URL || 'https://tondomaine.org'
-}));
-
-// Body parser JSON
 app.use(express.json());
 
-// Exemple d'endpoint
-app.get('/api/hello', (req, res) => {
-  res.json({ message: 'Hello UNESCO Project!' });
+// Servir le frontend buildé
+app.use(express.static(path.join(__dirname, "../front/dist")));
+
+// API de test
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok" });
 });
 
-// Start server
+// SPA fallback
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../front/dist/index.html"));
+});
+
+// Lancer le serveur
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log("mobilite-app running on port", PORT);
 });
