@@ -1,0 +1,9 @@
+{
+  "name": "mobilite-app",
+  "version": "1.0.0",
+  "scripts": {
+    "install": "cd api && npm ci && cd ../front && npm ci",
+    "build": "cd front && npm run build",
+    "start": "cd api && node app.js"
+  }
+}
